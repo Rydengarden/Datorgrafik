@@ -8,7 +8,7 @@
 #include "core/ShaderProgramManager.hpp"
 
 #include <imgui.h>
-
+#include <stack>
 #include <clocale>
 #include <cstdlib>
 
@@ -249,8 +249,10 @@ int main()
 		// TODO: Replace this explicit rendering of the Earth and Moon
 		// with a traversal of the scene graph and rendering of all its
 		// nodes.
-		earth.render(animation_delta_time_us, camera.GetWorldToClipMatrix(), glm::translate(glm::mat4(1.0f), glm::vec3(2.0f, 0.0f, 0.0f)), show_basis);
-		//moon.render(animation_delta_time_us, camera.GetWorldToClipMatrix(), glm::mat4(1.0f), show_basis);
+        //earth.set_scale(glm::vec3(1.0f,0.2f,0.2f));
+        glm::mat4 earthMatrix = earth.render(animation_delta_time_us, camera.GetWorldToClipMatrix(), glm::translate(glm::mat4(1.0f), glm::vec3(2.0f, 0.0f, 0.0f)), show_basis);
+        
+		moon.render(animation_delta_time_us, camera.GetWorldToClipMatrix(), earthMatrix, show_basis);
 
 
 		//
