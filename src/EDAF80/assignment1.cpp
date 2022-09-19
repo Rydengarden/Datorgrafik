@@ -314,8 +314,8 @@ int main()
             stack.pop();
             glm::mat4 transformation = current.body -> render(animation_delta_time_us, camera.GetWorldToClipMatrix(),current.parent_transform, show_basis);
             if (current.body == &saturn){
-               // camera.mWorld.SetTranslate(transformation*glm::translate(glm::mat4(1.0f),glm::vec3(1.0f,0.0f,0.0f))*glm::vec4(glm::vec3(2.0f, 1.0f, 1.0f),1));
-                //camera.mWorld.LookAt(transformation*glm::vec4(glm::vec3(1.0f, 0.0f, 0.0f),1));
+                camera.mWorld.SetTranslate(transformation*glm::translate(glm::mat4(1.0f),glm::vec3(1.0f,0.0f,0.0f))*glm::vec4(glm::vec3(2.0f, 1.0f, 1.0f),1));
+                camera.mWorld.LookAt(transformation*glm::vec4(glm::vec3(1.0f, 0.0f, 0.0f),1));
             }
             for (int i = 0; i < children.size(); i++)
             {
