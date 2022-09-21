@@ -43,7 +43,7 @@ void
 edaf80::Assignment2::run()
 {
 	// Load the sphere geometry
-	auto const shape = parametric_shapes::createCircleRing(2.0f, 0.75f, 40u, 4u);
+	auto const shape = parametric_shapes::createSphere(0.15f, 10u, 10u);
 	if (shape.vao == 0u)
 		return;
 
@@ -173,7 +173,9 @@ edaf80::Assignment2::run()
 	float basis_length_scale = 1.0f;
 
 	changeCullMode(cull_mode);
-
+    float  velocity = 0.01f;
+    float path_pos = 0;
+    int i;
 	while (!glfwWindowShouldClose(window)) {
 		auto const nowTime = std::chrono::high_resolution_clock::now();
 		auto const deltaTimeUs = std::chrono::duration_cast<std::chrono::microseconds>(nowTime - lastTime);
@@ -211,21 +213,22 @@ edaf80::Assignment2::run()
 
 		glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 		bonobo::changePolygonMode(polygon_mode);
-
-
+        
 		if (interpolate) {
-			//! \todo Interpolate the movement of a shape between various
-			//!        control points.
+            glm::vec3 newPosition;
+            i = floor(path_pos);
+            float value = path_pos - i;
+            
 			if (use_linear) {
-				//! \todo Compute the interpolated position
-				//!       using the linear interpolation.
+                newPosition = interpolation::evalLERP(control_point_locations[i % 9], control_point_locations[(i+1) % 9], value);
+                
 			}
 			else {
-				//! \todo Compute the interpolated position
-				//!       using the Catmull-Rom interpolation;
-				//!       use the `catmull_rom_tension`
-				//!       variable as your tension argument.
+                newPosition = interpolation::evalCatmullRom(control_point_locations[i % 9], control_point_locations[(i+1) % 9], control_point_locations[(i+2) % 9], control_point_locations[(i+3) % 9], catmull_rom_tension,value);
 			}
+            path_pos +=  velocity;
+            //path_pos +=  velocity / glm::distance(control_point_locations[i % 9], control_point_locations[(i+1) % 9]);
+            circle_rings.get_transform().SetTranslate(newPosition);
 		}
 
 		circle_rings.render(mCamera.GetWorldToClipMatrix());
